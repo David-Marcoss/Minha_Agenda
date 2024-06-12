@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  postgresDb:
+    image: postgres:latest
+    container_name: postgresDb
+    environment:
+      POSTGRES_DB: AuthDB
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+  
+  back-end:
+    container_name: back-end
+
+    build:
+      context: ./Back-end/
+    ports:
+      - "3000:3000"
+ 
+    depends_on: 
+      - postgresDb
+  
+  front-end:
+    container_name: front-end
+
+    build:
+      context: ./front-end/
+    ports:
+      - "8080:8080"
+ 
+    depends_on: 
+      - back-end
+
+volumes:
+  postgres_volume:
